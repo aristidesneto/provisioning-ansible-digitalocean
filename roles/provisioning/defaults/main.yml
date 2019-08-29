@@ -1,0 +1,5 @@
+---
+# defaults file for provisioning
+key:
+  name: Ansible
+  path: "~/.ssh/id_rsa.pub"

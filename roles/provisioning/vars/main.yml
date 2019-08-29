@@ -1,0 +1,10 @@
+---
+# vars file for provisioning
+oauth_token: token
+droplet_name: ansible-prod
+size: s-1vcpu-1gb
+region: nyc1
+image: debian-10-x64
+
+user_ssh: ansible
+user_ssh_name: Ansible
