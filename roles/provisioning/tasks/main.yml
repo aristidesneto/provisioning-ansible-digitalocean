@@ -7,22 +7,24 @@
     ssh_pub_key: "{{ item }}"
     state: present
   with_file: "{{ key.path }}"
+  no_log: true
   register: result
 
 - name: Fact SSH Key
-  digital_ocean_sshkey_facts:
+  digital_ocean_sshkey_info:
     oauth_token: "{{ oauth_token }}"
+  register: ssh_keys
 
 - name: Setando SSH Key na variavel
   set_fact:
-    pubkey: "{{ item.id }}"
-  loop: "{{ ssh_keys|json_query(ssh_pubkey) }}"
+    pubkey: "{{ item.public_key }}"
+  loop: "{{ ssh_keys.data|json_query(ssh_pubkey) }}"
   vars:
     ssh_pubkey: "[?name=='{{ key.name }}']"
+  no_log: true
 
 - debug:
     msg: "{{ pubkey }}"
-
 
 - name: Criando droplet na Digital Ocean
   digital_ocean_droplet:
@@ -32,12 +34,9 @@
     size: "{{ size }}"
     region: "{{ region }}"
     image: "{{ image }}"
-    ssh_keys: [ "{{ pubkey }}" ] 
+    # ssh_keys: [ "{{ pubkey }}" ] 
     wait_timeout: 500
   register: deploy
-
-- debug:
-    msg: "ID is {{ deploy.data.droplet.id }}, IP is {{ deploy.data.ip_address }}"
 
 - name: Verificando se o droplet esta presente
   digital_ocean_droplet:
@@ -50,15 +49,7 @@
     image: "{{ image }}"
     wait_timeout: 500
 
+- debug:
+    msg: "DropletId: {{ deploy.data.droplet.id }}, IP: {{ deploy.data.ip_address }}"
 
-- name: Adicionando usuário administrador
-  user:
-    name: "{{ user_ssh }}"
-    comment: "{{ user_ssh_name }}"
-
-- name: Set authorized key taken from file
-  authorized_key:
-    user: "{{ user_ssh }}"
-    state: present
-    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 

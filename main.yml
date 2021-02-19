@@ -1,5 +1,9 @@
 ---
 - hosts: local
   # become: yes
+
+  vars:
+    oauth_token: token
+
   roles:
     - provisioning

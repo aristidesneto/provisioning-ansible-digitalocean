@@ -1,5 +1,5 @@
 ---
 # defaults file for provisioning
 key:
-  name: Ansible
-  path: "~/.ssh/id_rsa.pub"
+  name: AnsibleServer
+  path: "~/.ssh/id_rsa_digitalocean.pub"

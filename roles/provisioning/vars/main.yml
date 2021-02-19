@@ -1,6 +1,6 @@
 ---
 # vars file for provisioning
-oauth_token: token
+# oauth_token: token
 droplet_name: ansible-prod
 size: s-1vcpu-1gb
 region: nyc1
